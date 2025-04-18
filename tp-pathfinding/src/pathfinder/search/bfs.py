@@ -16,7 +16,7 @@ class BreadthFirstSearch:
             Solution: Solution found
         """
         # Initialize a node with the initial position
-        node = Node("", grid.start, 0, parent=None, action=None)
+        node = Node("", state=grid.start, coast=0, parent=None, action=None)
         
         # Initialize the explored dictionary to be empty
         alcanzados = {} 

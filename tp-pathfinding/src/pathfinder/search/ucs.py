@@ -16,10 +16,10 @@ class UniformCostSearch:
             Solution: Solution found
         """
         # Initialize a node with the initial position
-        node = Node("", grid.start, 0, parent=None, action=None)
+        node = Node("", grid.start, coast=0, parent=None, action=None)
 
         # Initialize the frontier with the initial node
-        # In this example, the frontier is a queue
+        # In this example, the frontier is a priority queue
         frontier = PriorityQueueFrontier()
         frontier.add(node, node.cost)
 
@@ -57,4 +57,4 @@ class UniformCostSearch:
                     alcanzados[new_state] = new_cost
 
                     # Add the new node to the frontier
-                    frontier.add(new_node,new_cost)
+                    frontier.add(new_node, new_cost)
