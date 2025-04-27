@@ -16,7 +16,7 @@ class UniformCostSearch:
             Solution: Solution found
         """
         # Initialize a node with the initial position
-        node = Node("", grid.start, coast=0, parent=None, action=None)
+        node = Node("", grid.start, cost=0, parent=None, action=None)
 
         # Initialize the frontier with the initial node
         # In this example, the frontier is a priority queue
