@@ -30,12 +30,13 @@ class GreedyBestFirstSearch:
             Solution: Solution found
         """
         # Initialize a node with the initial position
-        node = Node(value="", state=grid.start, cost=0, parent=None, action=None, heuristic=0)
+        node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
+        node.estimated_distance = heuristic(node, grid.end) # Asigna la heuristica a la distancia estimada
 
         # Initialize the frontier with the initial node
         # In this example, the frontier is a priority queue
         frontier = PriorityQueueFrontier()
-        frontier.add(node, heuristic(node, grid.end))   # grid.end es el estado objetivo
+        frontier.add(node)
 
         # Initialize the explored dictionary to be empty
         explored = {} 
@@ -49,27 +50,28 @@ class GreedyBestFirstSearch:
             
             node = frontier.pop()
 
-            if node.state == grid.end():
+            if node.state == grid.end:
                 return Solution(node, explored)
             
             succesors = grid.get_neighbours(node.state)
 
             for action in succesors:
                 new_state = succesors[action]
-                #new_coast = node.coast + grid.get_cost(new_state)
+                new_cost = node.cost + grid.get_cost(new_state)
 
                 # Check if the successor is not reached
-                if new_state not in explored: #or new_coast < explored[new_state]:
+                if new_state not in explored or new_cost < explored[new_state]:
 
                     # Initialize the son node
                     new_node = Node(value="",
                                     state=new_state,
-                                    cost=0,
+                                    cost=new_cost,
                                     parent=node,
                                     action=action)
+                    new_node.estimated_distance = heuristic(new_node, grid.end)
                     
                     # Mark the successor as reached
                     explored[new_state] = True
 
                     # Add the new node to the frontier
-                    frontier.add(new_node, heuristic(new_node, grid.end))
+                    frontier.add(new_node)
