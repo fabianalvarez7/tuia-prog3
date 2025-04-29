@@ -2,6 +2,7 @@ from ..models.grid import Grid
 from ..models.frontier import PriorityQueueFrontier
 from ..models.solution import NoSolution, Solution
 from ..models.node import Node
+from ..models.heuristic import heuristic
 
 
 class AStarSearch:
