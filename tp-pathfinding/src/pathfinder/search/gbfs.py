@@ -2,7 +2,21 @@ from ..models.grid import Grid
 from ..models.frontier import PriorityQueueFrontier
 from ..models.solution import NoSolution, Solution
 from ..models.node import Node
-from ..models.heuristic import heuristic
+
+
+# Función heurística: distancia de Manhattan 
+def heuristica(node: Node, objetivo: tuple[int, int]) -> int:
+    """
+    Distancia de Manhattan = |x_actual - x_objetivo| + |y_actual - y_objetivo|
+
+    Args:
+        node (Node): el nodo actual del cual nos interesa el estado (tupla[int, int])
+        objetivo: una tupla que indica la posición del estado objetivo
+    Returns:
+        La distancia de Manhattan desde el estado actual hasta el estado objetivo.
+    """
+
+    return abs(node.state[0] - objetivo[0]) + abs(node.state[1] - objetivo[1])
 
 
 class GreedyBestFirstSearch:
@@ -18,7 +32,8 @@ class GreedyBestFirstSearch:
         """
         # Initialize a node with the initial position
         node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
-        node.estimated_distance = heuristic(node, grid.end) # Asigna la heuristica a la distancia estimada
+        # Asigna la heuristica a la distancia estimada
+        node.estimated_distance = heuristica(node, grid.end) 
 
         # Initialize the frontier with the initial node
         # In this example, the frontier is a priority queue
@@ -29,7 +44,7 @@ class GreedyBestFirstSearch:
         explored = {} 
         
         # Add the node to the explored dictionary
-        explored[node.state] = True
+        explored[node.state] = node.cost
         
         while True:
             if frontier.is_empty():
@@ -55,10 +70,10 @@ class GreedyBestFirstSearch:
                                     cost=new_cost,
                                     parent=node,
                                     action=action)
-                    new_node.estimated_distance = heuristic(new_node, grid.end)
+                    new_node.estimated_distance = heuristica(new_node, grid.end)
                     
                     # Mark the successor as reached
-                    explored[new_state] = True
+                    explored[new_state] = new_cost
 
                     # Add the new node to the frontier
                     frontier.add(new_node)
