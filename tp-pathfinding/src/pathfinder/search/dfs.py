@@ -16,14 +16,14 @@ class DepthFirstSearch:
             Solution: Solution found
         """
         # Initialize a node with the initial position
-        node = Node("", state=grid.start, cost=0, parent=None, action=None)
+        node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
         
         # Initialize the explored dictionary to be empty
-        expandidos = {} 
+        explored = {} 
 
         # Return if the node contains a goal state
         if node.state == grid.end:
-            return Solution(node, expandidos)    
+            return Solution(node, explored)    
 
         # Initialize the frontier with the initial node
         # In this example, the frontier is a stack
@@ -34,11 +34,11 @@ class DepthFirstSearch:
         while True:
 
             if frontier.is_empty():
-                return NoSolution(expandidos)
+                return NoSolution(explored)
             
             node = frontier.remove()
 
-            if not node.state in expandidos:  
+            if not node.state in explored:  
                 frontier.add(node)
 
             
@@ -48,7 +48,7 @@ class DepthFirstSearch:
                 new_state = successors[action]
                 
                 # Check if the successor is not reached
-                if new_state not in expandidos:
+                if new_state not in explored:
 
                     # Initialize the son node
                     new_node = Node("", new_state,
@@ -56,13 +56,13 @@ class DepthFirstSearch:
                                     parent=node, action=action)
 
                     # Mark the successor as reached
-                    expandidos[new_state] = True
+                    explored[new_state] = True
 
                     # Return if the node contains a goal state
                     # In this example, the goal test is run
                     # before adding a new node to the frontier
                     if new_state == grid.end:
-                        return Solution(new_node, expandidos)
+                        return Solution(new_node, explored)
 
                     # Add the new node to the frontier
                     frontier.add(new_node)
