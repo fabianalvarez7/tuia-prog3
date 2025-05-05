@@ -36,7 +36,7 @@ class BreadthFirstSearch:
             node = frontier.remove()
             
             # Retorna si el nodo actual contiene el estado objetivo
-            if node.state == grid.end:
+            if node.state == grid.end:  # test-objetivo
                 return Solution(node, explored)
             
             # Genera un diccionario con los estados de los nodos vecinos
@@ -58,7 +58,7 @@ class BreadthFirstSearch:
                     # Retorna si el nodo contiene el estado objetivo.
                     # El test-objetivo se ejecuta antes de agregar
                     # un nuevo nodo a la frontera.
-                    if new_state == grid.end:
+                    if new_state == grid.end:   # test-objetivo
                         return Solution(new_node, explored)
 
                     # Marca el estado del nodo sucesor como explorado
