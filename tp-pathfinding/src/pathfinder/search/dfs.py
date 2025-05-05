@@ -15,22 +15,17 @@ class DepthFirstSearch:
         Returns:
             Solution: Solution found
         """
-        # Initialize a node with the initial position
+        # Inicializa un nodo con la posición inicial
         node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
         
-        # Initialize the explored dictionary to be empty
-        explored = {} 
-
-        # Return if the node contains a goal state
-        if node.state == grid.end:
-            return Solution(node, explored)    
-
-        # Initialize the frontier with the initial node
-        # In this example, the frontier is a stack
+        # Inicializa la frontera con el nodo inicial
+        # La frontera es una pila
         frontier = StackFrontier()
         frontier.add(node)
 
-        # do
+        # Inicializa el diccionario de estados explorados
+        explored = {}
+
         while True:
 
             if frontier.is_empty():
@@ -38,31 +33,32 @@ class DepthFirstSearch:
             
             node = frontier.remove()
 
-            if not node.state in explored:  
-                frontier.add(node)
+            # Marca el estado del nodo actual como explorado
+            explored[node.state] = True
 
-            
+            # Retorna si el nodo actual contiene el estado objetivo
+            if node.state == grid.end:  # test-objetivo
+                return Solution(node, explored)
+
+            # Obtiene los nodos vecinos del nodo actual
             successors = grid.get_neighbours(node.state)
 
             for action in successors:
-                new_state = successors[action]
+                new_state = successors[action]  # función resultado
                 
-                # Check if the successor is not reached
+                # Chequea si el sucesor no está en explorados
                 if new_state not in explored:
 
-                    # Initialize the son node
-                    new_node = Node("", new_state,
-                                    node.cost + grid.get_cost(new_state),
-                                    parent=node, action=action)
+                    # Inicializa el nodo hijo
+                    new_node = Node(value="",
+                                    state=new_state,
+                                    cost=node.cost + grid.get_cost(new_state),
+                                    parent=node,
+                                    action=action)
 
-                    # Mark the successor as reached
-                    explored[new_state] = True
-
-                    # Return if the node contains a goal state
-                    # In this example, the goal test is run
-                    # before adding a new node to the frontier
-                    if new_state == grid.end:
+                    # Retorna si el nodo contiene el estado objetivo
+                    if new_state == grid.end:   # test-objetivo
                         return Solution(new_node, explored)
 
-                    # Add the new node to the frontier
+                    # Agrega el nuevo nodo a la frontera
                     frontier.add(new_node)
