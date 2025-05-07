@@ -17,6 +17,10 @@ class DepthFirstSearch:
         """
         # Inicializa un nodo con la posición inicial
         node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
+
+        # Retorna si el nodo contiene el estado objetivo
+        if node.state == grid.end:   # test-objetivo
+            return Solution(new_node, explored)
         
         # Inicializa la frontera con el nodo inicial
         # La frontera es una pila
@@ -33,12 +37,12 @@ class DepthFirstSearch:
             
             node = frontier.remove()
 
+            # Si el estado ya fue explorado, se ignora
+            if node.state in explored:
+                continue
+
             # Marca el estado del nodo actual como explorado
             explored[node.state] = True
-
-            # Retorna si el nodo actual contiene el estado objetivo
-            if node.state == grid.end:  # test-objetivo
-                return Solution(node, explored)
 
             # Obtiene los nodos vecinos del nodo actual
             successors = grid.get_neighbours(node.state)

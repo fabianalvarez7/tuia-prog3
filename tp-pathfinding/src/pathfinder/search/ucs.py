@@ -15,46 +15,48 @@ class UniformCostSearch:
         Returns:
             Solution: Solution found
         """
-        # Initialize a node with the initial position
-        node = Node("", grid.start, cost=0, parent=None, action=None)
+        # Inicializa un nodo con la posición inicial
+        node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
 
-        # Initialize the frontier with the initial node
-        # In this example, the frontier is a priority queue
+        # Inicializa la frontera con el nodo inicial
+        # La frontera es una cola de prioridad
         frontier = PriorityQueueFrontier()
         frontier.add(node, node.cost)
 
-        # Initialize the explored dictionary to be empty
-        alcanzados = {}
-        # Add the node to the alcanzados dictionary
-        alcanzados[node.state] = node.cost
-
-        # do
+        # Inicializa el diccionario de estados explorados y su costo
+        explored = {}
+        # Marca el estado del nodo como explorado
+        explored[node.state] = node.cost
+        
         while True:
 
             if frontier.is_empty():
-                return NoSolution(alcanzados)
+                return NoSolution(explored)
             
             node = frontier.pop()
 
-            if node.state == grid.end:
-                return Solution(node, alcanzados)
+            # Retorna si el nodo actual contiene el estado objetivo
+            if node.state == grid.end:  # test-objetivo
+                return Solution(node, explored)
 
+            # Genera un diccionario con los estados de los nodos vecinos
             successors = grid.get_neighbours(node.state)
 
             for action in successors:
-                new_state = successors[action]
+                new_state = successors[action]  # función resultado
                 new_cost = node.cost + grid.get_cost(new_state)
                 
-                # Check if the successor is not reached
-                if new_state not in alcanzados or new_cost < alcanzados[new_state]:
+                # Si el sucesor no está en explorared o si el costo es menor
+                if new_state not in explored or new_cost < explored[new_state]:
 
-                    # Initialize the son node
-                    new_node = Node("", new_state,
-                                    new_cost,
-                                    parent=node, action=action)
+                    # Inicializa el nodo hijo
+                    new_node = Node(value="",
+                                    state=new_state,
+                                    cost=new_cost,
+                                    parent=node,
+                                    action=action)
 
-                    # Mark the successor as reached
-                    alcanzados[new_state] = new_cost
-
-                    # Add the new node to the frontier
+                    # Marca el estado del nodo como explorado
+                    explored[new_state] = new_cost
+                    # Agrega el nuevo nodo a la frontera
                     frontier.add(new_node, new_cost)

@@ -31,18 +31,15 @@ class GreedyBestFirstSearch:
             Solution: Solution found
         """
         # Initialize a node with the initial position
-        node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
-        # Asigna la heuristica a la distancia estimada
-        node.estimated_distance = heuristica(node, grid.end) 
+        node = Node(value="", state=grid.start, cost=0, parent=None, action=None) 
 
         # Initialize the frontier with the initial node
         # In this example, the frontier is a priority queue
         frontier = PriorityQueueFrontier()
-        frontier.add(node)
+        frontier.add(node, heuristica(node, grid.end))
 
         # Initialize the explored dictionary to be empty
         explored = {} 
-        
         # Add the node to the explored dictionary
         explored[node.state] = node.cost
         
@@ -70,10 +67,9 @@ class GreedyBestFirstSearch:
                                     cost=new_cost,
                                     parent=node,
                                     action=action)
-                    new_node.estimated_distance = heuristica(new_node, grid.end)
                     
                     # Mark the successor as reached
                     explored[new_state] = new_cost
 
                     # Add the new node to the frontier
-                    frontier.add(new_node)
+                    frontier.add(new_node, heuristica(new_node, grid.end))

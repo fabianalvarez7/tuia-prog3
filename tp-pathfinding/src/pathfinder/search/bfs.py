@@ -17,6 +17,10 @@ class BreadthFirstSearch:
         """
         # Inicializa un nodo con la posición inicial
         node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
+
+        # Retorna si el nodo actual contiene el estado objetivo
+        if node.state == grid.end:  # test-objetivo
+            return Solution(node, explored)
         
         # Inicializa la frontera con el nodo inicial
         # La frontera es una cola
@@ -45,7 +49,7 @@ class BreadthFirstSearch:
             for action in successors:
                 new_state = successors[action]  # función resultado
                 
-                # Chequea si el sucesor no está en explorados
+                # Chequea si el sucesor no está en explored
                 if new_state not in explored:
 
                     # Inicializa el nodo hijo

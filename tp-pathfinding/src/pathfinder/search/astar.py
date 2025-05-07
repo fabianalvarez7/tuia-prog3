@@ -30,18 +30,15 @@ class AStarSearch:
             Solution: Solution found
         """
         # Initialize a node with the initial position
-        node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
-        # Asigna el valor de evalucación a la distancia estimada
-        node.estimated_distance = evaluacion(node, grid.end) 
+        node = Node(value="", state=grid.start, cost=0, parent=None, action=None) 
 
         # Initialize the frontier with the initial node
         # In this example, the frontier is a priority queue
         frontier = PriorityQueueFrontier()
-        frontier.add(node)
+        frontier.add(node, evaluacion(node, grid.end))
 
         # Initialize the explored dictionary to be empty
         explored = {} 
-        
         # Add the node to the explored dictionary
         explored[node.state] = node.cost
         
@@ -69,11 +66,9 @@ class AStarSearch:
                                     cost=new_cost,
                                     parent=node,
                                     action=action)
-                    new_node.estimated_distance = evaluacion(new_node, grid.end)
-                    
+                
                     # Mark the successor as reached
                     explored[new_state] = new_cost
-
                     # Add the new node to the frontier
-                    frontier.add(new_node)
+                    frontier.add(new_node, evaluacion(node, grid.end))
 
