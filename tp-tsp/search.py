@@ -64,7 +64,7 @@ class HillClimbing(LocalSearch):
             # Buscamos la acción que genera el sucesor con mayor valor objetivo
             act, succ_val = problem.max_action(actual)
 
-            # Retornar si estamos en un maximo local:
+            # Retornar si estamos en un maximo local
             # el valor objetivo del sucesor es menor o igual al del estado actual
             if succ_val <= value:
 
@@ -83,7 +83,7 @@ class HillClimbing(LocalSearch):
 class HillClimbingReset(LocalSearch):
     """Algoritmo de ascension de colinas con reinicio aleatorio."""
     
-    def __init__(self, restarts=10):
+    def __init__(self, restarts=12):
         super().__init__()  # LLamada al consructor de LocalSearch
         self.restarts = restarts  # Cantidad de reinicios aleatorios
 
@@ -97,7 +97,7 @@ class HillClimbingReset(LocalSearch):
             # Genermos un nuevo estado aleatorio inicial
             random_state = problem.random_reset()
 
-            # Reemplazamos el estado inicial para que HillClimbing lo use.
+            # Reemplazamos el estado inicial
             problem.init = random_state
             
             # Ejecutamos HillClimbing con ese estado aleatorio.
@@ -120,10 +120,10 @@ class HillClimbingReset(LocalSearch):
 class Tabu(LocalSearch):
     """Algoritmo de busqueda tabu."""
 
-    def __init__(self, tabu_size=40, max_iters=1000):
+    def __init__(self, tabu_size=30, max_iters=1000):
         super().__init__()
         self.tabu_size = tabu_size      # Capacidad máxima de la lista tabú
-        self.max_iters = max_iters      # Criterio de parada
+        self.max_iters = max_iters      # Cantidad máxima de iteraciones
 
     def solve(self, problem: OptProblem):
         start = time()
