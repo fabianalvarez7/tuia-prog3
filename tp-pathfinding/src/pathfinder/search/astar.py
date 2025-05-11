@@ -7,13 +7,13 @@ from ..search.gbfs import heuristica
 
 def evaluacion(node: Node, objetivo: tuple[int, int]) -> int:
     """
-    Estima el costo de una solución sumando el costo de camino de un nodo y su valor heurístico
+    Estima el costo de una solución sumando el costo de camino de un nodo y su valor heurístico.
     
-    Args:
+    Argumentos:
         node (Node): el nodo a evaluar.
         objetivo (tuple[int, int]): la posición del estado objetivo.
-    Returns:
-        El valor de evaluación del nodo. 
+    Retorno:
+        El valor de evaluación del nodo.
     """
     return node.cost + heuristica(node, objetivo)
 
@@ -29,17 +29,17 @@ class AStarSearch:
         Returns:
             Solution: Solution found
         """
-        # Initialize a node with the initial position
+        # Inicializa un nodo con la posición inicial
         node = Node(value="", state=grid.start, cost=0, parent=None, action=None) 
 
-        # Initialize the frontier with the initial node
-        # In this example, the frontier is a priority queue
+        # Inicializa la frontera con el nodo inicial
+        # La frontera es una cola de prioridad
         frontier = PriorityQueueFrontier()
         frontier.add(node, evaluacion(node, grid.end))
 
-        # Initialize the explored dictionary to be empty
+        # Inicializa el diccionario de estados explorados
         explored = {} 
-        # Add the node to the explored dictionary
+        # Agrega el estado del nodo inicial al diccionario de explorados
         explored[node.state] = node.cost
         
         while True:
@@ -48,27 +48,29 @@ class AStarSearch:
             
             node = frontier.pop()
 
-            if node.state == grid.end:
+            # Retorna si el nodo actual contiene el estado objetivo
+            if node.state == grid.end:  # test-objetivo
                 return Solution(node, explored)
             
+            # Genera un diccionario con los estados de los nodos vecinos
             succesors = grid.get_neighbours(node.state)
 
             for action in succesors:
                 new_state = succesors[action]
                 new_cost = node.cost + grid.get_cost(new_state)
 
-                # Check if the successor is not reached
+                # Chequea si el sucesor no está en explored
                 if new_state not in explored or new_cost < explored[new_state]:
 
-                    # Initialize the son node
+                    # Inicializa el nodo hijo
                     new_node = Node(value="",
                                     state=new_state,
                                     cost=new_cost,
                                     parent=node,
                                     action=action)
                 
-                    # Mark the successor as reached
+                    # Marca el estado del nodo sucesor como explorado
                     explored[new_state] = new_cost
-                    # Add the new node to the frontier
+                    # Agrega el nuevo nodo a la frontera
                     frontier.add(new_node, evaluacion(node, grid.end))
 
