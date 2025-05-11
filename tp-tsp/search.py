@@ -18,6 +18,7 @@ No viene implementado, se debe completar.
 from __future__ import annotations
 from time import time
 from problem import OptProblem
+from collections import deque
 
 
 class LocalSearch:
@@ -83,38 +84,79 @@ class HillClimbingReset(LocalSearch):
     """Algoritmo de ascension de colinas con reinicio aleatorio."""
     
     def __init__(self, restarts=10):
-        self.restarts = restarts  # Cantidad de reinicios aleatorios que vamos a hacer.
+        super().__init__()  # LLamada al consructor de LocalSearch
+        self.restarts = restarts  # Cantidad de reinicios aleatorios
 
-    def solve(self, problem):
+    def solve(self, problem: OptProblem):
         start = time()
-        self.value = float('-inf')  # Inicializamos el mejor valor posible.
-        self.tour = None
-        self.niters = 0  # Contador global de iteraciones (suma de todas las ejecuciones).
+        self.value = float('-inf')  # Inicializamos con el peor valor posible
+        self.tour = None    # Todavía no hay ningún tour
+        self.niters = 0  # Contador de iteraciones
 
-        for a in range(self.restarts):  # Repetimos varias veces...
+        for _ in range(self.restarts):
+            # Genermos un nuevo estado aleatorio inicial
             random_state = problem.random_reset()
-            # Elegimos un nuevo estado inicial aleatorio (otro orden de ciudades).
 
+            # Reemplazamos el estado inicial para que HillClimbing lo use.
             problem.init = random_state
-            # ⚙ Reemplazamos el estado inicial para que HillClimbing lo use.
-
+            
+            # Ejecutamos HillClimbing con ese estado aleatorio.
             local = HillClimbing()
             local.solve(problem)
-            # 🚀 Ejecutamos HillClimbing con ese estado aleatorio.
+            
+            # Acumulamos las iteraciones totales.
+            self.niters += local.niters  
 
-            self.niters += local.niters  # Acumulamos las iteraciones totales.
-
+            # Guardamos la mejor solución
             if local.value > self.value:
-                # Si la nueva solución es mejor que la mejor global, la guardamos.
                 self.value = local.value
                 self.tour = local.tour
 
-        end = time()
-        self.time = end - start  # Calculamos tiempo total.
+        # Calculamos tiempo total de ejecución
+        self.time = time() - start  
 
         
 
 class Tabu(LocalSearch):
     """Algoritmo de busqueda tabu."""
 
-    # COMPLETAR
+    def __init__(self, tabu_size=40, max_iters=1000):
+        super().__init__()
+        self.tabu_size = tabu_size      # Capacidad máxima de la lista tabú
+        self.max_iters = max_iters      # Criterio de parada
+
+    def solve(self, problem: OptProblem):
+        start = time()
+        self.niters = 0
+
+        actual = problem.init
+        mejor = actual
+        valor_actual = problem.obj_val(actual)
+        mejor_valor = valor_actual
+
+        tabu = deque(maxlen=self.tabu_size)  # Cola de capacidad fija
+
+        while self.niters < self.max_iters:
+            # Mejor acción que no esté en la lista tabú
+            act, succ_val = problem.max_action(actual, tabu)
+
+            # Aplicar esa acción para generar un nuevo estado
+            sucesor = problem.result(actual, act)
+
+            # Ver si ese nuevo estado es el mejor hasta ahora
+            if problem.obj_val(sucesor) > mejor_valor:
+                mejor = sucesor
+                mejor_valor = problem.obj_val(sucesor)
+
+            # Agregar acción a la lista tabú
+            # Esto evita que se revierta en las próximas iteraciones
+            tabu.append(act)
+
+            # Avanzar al nuevo estado, aunque sea peor
+            actual = sucesor
+            self.niters += 1
+
+        # Guardamos el mejor recorrido encontrado
+        self.tour = mejor
+        self.value = mejor_valor
+        self.time = time() - start
