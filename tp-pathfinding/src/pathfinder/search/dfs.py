@@ -18,17 +18,17 @@ class DepthFirstSearch:
         # Inicializa un nodo con la posición inicial
         node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
 
+        # Inicializa el diccionario de estados explorados
+        explored = {}
+
         # Retorna si el nodo contiene el estado objetivo
         if node.state == grid.end:   # test-objetivo
-            return Solution(new_node, explored)
+            return Solution(node, explored)
         
         # Inicializa la frontera con el nodo inicial
         # La frontera es una pila
         frontier = StackFrontier()
         frontier.add(node)
-
-        # Inicializa el diccionario de estados explorados
-        explored = {}
 
         while True:
 

@@ -18,6 +18,11 @@ class BreadthFirstSearch:
         # Inicializa un nodo con la posición inicial
         node = Node(value="", state=grid.start, cost=0, parent=None, action=None)
 
+        # Inicializa el diccionario de estados explorados
+        explored = {} 
+        # Agrega el estado del nodo inicial a explored con el valor 'True'
+        explored[node.state] = True
+
         # Retorna si el nodo actual contiene el estado objetivo
         if node.state == grid.end:  # test-objetivo
             return Solution(node, explored)
@@ -26,11 +31,6 @@ class BreadthFirstSearch:
         # La frontera es una cola
         frontier = QueueFrontier()
         frontier.add(node)
-
-        # Inicializa el diccionario de estados explorados
-        explored = {} 
-        # Agrega el estado del nodo inicial a explored con el valor 'True'
-        explored[node.state] = True
 
         while True:
 
